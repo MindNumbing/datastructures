@@ -56,7 +56,7 @@ class Node:
             return self
 
         new_node = Node()
-        for node in self:
+        for node in self.reverse():
             if node != name:
                 new_node = new_node.push(node)
             else:
