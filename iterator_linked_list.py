@@ -25,7 +25,6 @@ class Node:
     next: Optional["Node"] = None
 
     def push(self, value: str) -> "Node":
-        # (ada).push("sheba") -- self = ada, value = sheba
         return Node(value, self)
 
     def pop(self) -> Tuple[str, Optional["Node"]]:
@@ -46,22 +45,21 @@ class Node:
         return node
 
     def contains(self, name: str) -> bool:
-        if name in self:
+        if self.value == name:
             return True
-        return False
+        elif self.next == None:
+            return False
+        return self.next.contains(name)
 
-    def remove(self, name: str) -> "Node":
-        if not self.contains(name):
-            print("Didn't find name")
-            return self
-
-        new_node = Node()
-        for node in self:
-            if node != name:
-                new_node = new_node.push(node)
+    def remove(self, name: str, node: Optional["Node"] = None) -> "Node":
+        if not node: node = Node()
+        if self.next:
+            if self.next.value == name:
+                new_node = self.next.next.remove(name, Node(self.value, node))
             else:
-                print("Skipping name")
-        return new_node
+                new_node = self.next.remove(name, Node(self.value, node))
+            return new_node
+        return node
 
     def __iter__(self):
       return LinkedListIterator(self)
@@ -90,17 +88,20 @@ empty_list = Node()
 list1 = empty_list.push("Alex")
 list2 = list1.push("Max")
 list3 = list2.push("Katey")
+list4 = list3.push("Max")
+list5 = list4.push("Katey")
 
 for kitty in list3:
     print(kitty)
 
 print("")
 print(list3.contains("Alex"))
+print(list3.contains("Alexy"))
 
 print("")
-nodelist = list3.remove("Agatha")
+nodelist = list5.remove("Agatha")
 print(nodelist)
 
 print("")
-nodelist = list3.remove("Max")
+nodelist = list5.remove("Max")
 print(nodelist)
